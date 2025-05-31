@@ -82,20 +82,19 @@ class LeavePeriod
   end
 
   # Total leave days acquired in this period: ACCRUED_DAYS_PER_FULL_MONTH × months_worked.
-  # We round to 4 decimal places for fractional days.
+  # On ne fait plus d'arrondi ici, l'arrondi se fait côté front.
   def days_acquired
-    (ACCRUED_DAYS_PER_FULL_MONTH * months_worked.to_d).round(4)
+    ACCRUED_DAYS_PER_FULL_MONTH * months_worked.to_d
   end
 
   # Valuation method 1: "maintain salary"
-  # Calculate (monthly_salary / 22) × days_acquired, round to 2 decimals.
+  # On ne fait plus d'arrondi ici, l'arrondi se fait côté front.
   def value_by_salary_maintain
-    ((monthly_salary / 22.to_d) * days_acquired.to_d).round(2)
+    (monthly_salary / 22.to_d) * days_acquired.to_d
   end
 
   # Valuation method 2: 10% of salaries paid during this period.
-  # For each covered month, compute the prorated salary for that month,
-  # then take 10% of it. Sum over all months. Round result to 2 decimals.
+  # On ne fait plus d'arrondi ici, l'arrondi se fait côté front.
   def value_by_10percent
     total = 0.to_d
 
@@ -123,7 +122,7 @@ class LeavePeriod
       total += (prorated_salary * 0.10.to_d)
     end
 
-    total.round(2)
+    total
   end
 
   # The leave value actually due: pick the higher of the two methods.

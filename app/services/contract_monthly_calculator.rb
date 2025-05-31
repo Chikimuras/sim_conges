@@ -143,7 +143,7 @@ class ContractMonthlyCalculator
       salary_due = calculate_prorated_salary(month_start)
 
       # (a) 10% of this month's salary
-      leave_10pct = (salary_due * 0.10.to_d).round(2)
+      leave_10pct = salary_due * 0.10.to_d
 
       # (b) “1/12 per month” lookup or zero
       leave_1_12 = leave_1_12_schedule[month_start] || 0.to_d
@@ -151,8 +151,7 @@ class ContractMonthlyCalculator
       # (c) “full payment” lookup or zero
       leave_integral = leave_integral_schedule[month_start] || 0.to_d
 
-      # (d) “10% adjustment” for the last truncated period or June payments:
-      #     If this month corresponds to a leave_integral entry, we compute a top‐up.
+      # (d) “10% adjustment” pour le dernier mois tronqué ou paiement de juin
       leave_regularization = 0.to_d
 
       if leave_integral_schedule.key?(month_start)
@@ -194,17 +193,17 @@ class ContractMonthlyCalculator
       end
 
       # (e) Total 10% = monthly 10% + any adjustment (only in June or final month)
-      leave_total_10pct = (leave_10pct + leave_regularization).round(2)
+      leave_total_10pct = leave_10pct + leave_regularization
 
       # Append this month’s data to results
       result << {
         month:                month_start,
-        salary_due:           salary_due.round(2),
-        leave_integral:       leave_integral.round(2),
-        leave_1_12:           leave_1_12.round(2),
-        leave_10pct:          leave_10pct.round(2),
-        leave_regularization: leave_regularization.round(2),
-        leave_total_10pct:    leave_total_10pct.round(2)
+        salary_due:           salary_due,
+        leave_integral:       leave_integral,
+        leave_1_12:           leave_1_12,
+        leave_10pct:          leave_10pct,
+        leave_regularization: leave_regularization,
+        leave_total_10pct:    leave_total_10pct
       }
     end
 
