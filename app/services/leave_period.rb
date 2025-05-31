@@ -128,6 +128,6 @@ class LeavePeriod
 
   # The leave value actually due: pick the higher of the two methods.
   def value_due
-    [value_by_salary_maintain, value_by_10percent].max
+    [ value_by_salary_maintain, value_by_10percent ].max
   end
 end
