@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require 'date'
-require 'bigdecimal'
-require 'bigdecimal/util'
-require_relative 'contract_leave_builder'
-require_relative 'leave_period'
+require "date"
+require "bigdecimal"
+require "bigdecimal/util"
+require_relative "contract_leave_builder"
+require_relative "leave_period"
 
 # ContractMonthlyCalculator builds a detailed breakdown for each calendar month
 # of a contract (start_date, end_date, monthly_salary).
@@ -64,9 +64,9 @@ class ContractMonthlyCalculator
       # Compute the "natural end" of this leave period (May 31):
       natural_end = if period.start_date.month >= 6
                       Date.new(period.start_date.year + 1, 5, 31)
-                    else
+      else
                       Date.new(period.start_date.year, 5, 31)
-                    end
+      end
 
       # If this period ends before its natural_end, and it matches contract_end, it's the last truncated period
       if period.end_date < natural_end && period.end_date == contract_end
@@ -87,9 +87,9 @@ class ContractMonthlyCalculator
       #   • Otherwise, natural_end = May 31 of start_year
       natural_end = if period.start_date.month >= 6
                       Date.new(period.start_date.year + 1, 5, 31)
-                    else
+      else
                       Date.new(period.start_date.year, 5, 31)
-                    end
+      end
 
       # The “first payout month” for 1/12 should be the month immediately AFTER that natural_end.
       # That way, if period.end_date = May 31 (full‐year), we start in June; if the period was
@@ -113,9 +113,9 @@ class ContractMonthlyCalculator
       # Compute the natural end of the period
       natural_end = if period.start_date.month >= 6
                       Date.new(period.start_date.year + 1, 5, 31)
-                    else
+      else
                       Date.new(period.start_date.year, 5, 31)
-                    end
+      end
 
       if idx == last_truncated_index
         # Pay the entire amount in the contract_end month
@@ -221,15 +221,15 @@ class ContractMonthlyCalculator
 
     effective_start = if month_start.year == contract_start.year && month_start.month == contract_start.month
                         contract_start
-                      else
+    else
                         month_start
-                      end
+    end
 
     effective_end = if month_start.year == contract_end.year && month_start.month == contract_end.month
                       contract_end
-                    else
+    else
                       month_last_day
-                    end
+    end
 
     days_covered = (effective_end.day - effective_start.day) + 1
     dim = month_last_day.day
@@ -262,15 +262,15 @@ class ContractMonthlyCalculator
 
     effective_start = if month_start.year == period.start_date.year && month_start.month == period.start_date.month
                         period.start_date
-                      else
+    else
                         month_start
-                      end
+    end
 
     effective_end = if month_start.year == period.end_date.year && month_start.month == period.end_date.month
                       period.end_date
-                    else
+    else
                       month_last_day
-                    end
+    end
 
     days_covered = (effective_end.day - effective_start.day) + 1
     dim = month_last_day.day
@@ -286,9 +286,9 @@ class ContractMonthlyCalculator
   def idx_of_last_truncated?(period)
     natural_end = if period.start_date.month >= 6
                     Date.new(period.start_date.year + 1, 5, 31)
-                  else
+    else
                     Date.new(period.start_date.year, 5, 31)
-                  end
+    end
 
     period.end_date < natural_end && period.end_date == contract_end
   end

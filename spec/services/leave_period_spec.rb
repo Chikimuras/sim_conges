@@ -59,7 +59,7 @@ describe LeavePeriod do
   end
 
   it 'choisit la valorisation la plus élevée pour value_due' do
-    expect(subject.value_due).to eq([subject.value_by_salary_maintain, subject.value_by_10percent].max)
+    expect(subject.value_due).to eq([ subject.value_by_salary_maintain, subject.value_by_10percent ].max)
   end
 
   context 'cas limite : période sur un mois complet' do

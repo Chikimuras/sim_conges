@@ -64,4 +64,3 @@ describe SimulatorController, type: :controller do
     end
   end
 end
-
