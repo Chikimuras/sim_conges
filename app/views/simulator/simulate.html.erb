@@ -1,0 +1,126 @@
+<h1>Résultats de la simulation de congés payés</h1>
+
+<!-- 1) Table of LeavePeriod details -->
+<h2>Périodes de congés</h2>
+<div style="overflow-x:auto;">
+  <table>
+    <thead>
+    <tr>
+      <th>Période</th>
+      <th>Mois travaillés</th>
+      <th>Jours acquis</th>
+      <th>Valeur (Maintien de salaire)</th>
+      <th>Valeur (10 %)</th>
+      <th>Valeur retenue (max)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @periods.each do |period| %>
+      <tr>
+        <td>
+          <%= period.start_date.strftime("%d %B %Y") %> →
+          <%= period.end_date.strftime("%d %B %Y") %>
+        </td>
+        <td><%= period.months_worked %></td>
+        <td><%= period.days_acquired %></td>
+        <td>
+          <%= number_to_currency(
+                period.value_by_salary_maintain,
+                unit: "€", separator: ",", delimiter: " "
+              ) %>
+        </td>
+        <td>
+          <%= number_to_currency(
+                period.value_by_10percent,
+                unit: "€", separator: ",", delimiter: " "
+              ) %>
+        </td>
+        <td>
+          <strong>
+            <%= number_to_currency(
+                  period.value_due,
+                  unit: "€", separator: ",", delimiter: " "
+                ) %>
+          </strong>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<!-- 2) Table of monthly breakdown -->
+<h2>Détails mensuels du contrat</h2>
+<div style="overflow-x:auto;">
+  <table>
+    <thead>
+    <tr>
+      <th>Mois</th>
+      <th>Salaire dû (€)</th>
+      <th>Congés – Paiement intégral en juin (€)</th>
+      <th>Congés – Paiement par 1/12ème (€)</th>
+      <th>Congés – Paiement 10 % (€)</th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @monthly_details.each do |detail| %>
+      <tr>
+        <td><%= detail[:month].strftime("%B %Y") %></td>
+        <td>
+          <%= number_with_precision(
+                detail[:salary_due],
+                precision: 2, delimiter: " ", separator: ","
+              ) %> €
+        </td>
+        <td>
+          <%= number_with_precision(
+                detail[:leave_integral],
+                precision: 2, delimiter: " ", separator: ","
+              ) %> €
+        </td>
+        <td>
+          <%= number_with_precision(
+                detail[:leave_1_12],
+                precision: 2, delimiter: " ", separator: ","
+              ) %> €
+        </td>
+        <td>
+          <%= number_with_precision(
+                detail[:leave_10pct],
+                precision: 2, delimiter: " ", separator: ","
+              ) %> €
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+    <tfoot>
+    <tr>
+      <th>Total</th>
+      <th></th>
+      <th>
+        <%= number_with_precision(
+              @monthly_details.sum { |d| d[:leave_integral] },
+              precision: 2, delimiter: " ", separator: ","
+            ) %> €
+      </th>
+      <th>
+        <%= number_with_precision(
+              @monthly_details.sum { |d| d[:leave_1_12] },
+              precision: 2, delimiter: " ", separator: ","
+            ) %> €
+      </th>
+      <th>
+        <%= number_with_precision(
+              @monthly_details.sum { |d| d[:leave_10pct] },
+              precision: 2, delimiter: " ", separator: ","
+            ) %> €
+      </th>
+    </tr>
+    </tfoot>
+  </table>
+</div>
+
+<!-- Back link to form -->
+<p>
+  <%= link_to "Nouvelle simulation", root_path %>
+</p>
